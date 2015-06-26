@@ -57,16 +57,15 @@ ActionGeo_Long:int,
 ActionGeo_FeatureID:int,
 DATEADDED:chararray,
 SOURCEURL:chararray);
+Records= GROUP GDELTRecords BY ActionGeo_CountryCode;
 
-Records= GROUP GDELTRecords2 BY ActionGeo_CountryCode;
-
-USINDIARECORDS = FILTER GDELTRecords2 BY (ActionGeo_CountryCode MATCHES 'IN|US');
+USINDIARECORDS = FILTER GDELTRecords BY (ActionGeo_CountryCode MATCHES 'IN|US');
 
 groupset= GROUP USINDIARECORDS BY (ActionGeo_CountryCode, MonthYear);
 
 numofevents = FOREACH groupset  GENERATE group, COUNT(USINDIARECORDS) AS soma;
 
 TOP10 = LIMIT numofevents 10;
-
-STORE TOP10 INTO 'myoutputex' USING PigStorage ('\t') ;
+--dump TOP10;
+STORE TOP10 INTO 'myoutputex1final' USING PigStorage ('\t') ;
 
